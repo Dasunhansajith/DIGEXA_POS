@@ -1,0 +1,1153 @@
+@import './variables.css';
+
+/* ==========================================================================
+   Page Container & Layout
+   ========================================================================== */
+.nex-auth-layout {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  background-color: var(--color-white);
+  color: var(--color-navy-900);
+  font-family: var(--font-family);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Split Columns */
+.nex-auth-layout__form-pane {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.5rem 3rem;
+  background-color: var(--color-white);
+  min-height: 100vh;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 10;
+  overflow-y: auto;
+}
+
+.nex-auth-layout__showcase-pane {
+  flex: 1 1 50%;
+  background: linear-gradient(145deg, #0b1329 0%, #0f172a 60%, #172554 100%);
+  color: var(--color-white);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Form Pane & Login Form
+   ========================================================================== */
+.nex-login-container {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.nex-login-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+
+.nex-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-slate-50);
+  border: 1px solid var(--color-slate-200);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-slate-600);
+}
+
+.nex-status-indicator__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  animation: nex-pulse 2s infinite;
+}
+
+@keyframes nex-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.nex-login-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+}
+
+.nex-login-intro {
+  margin-bottom: 2rem;
+}
+
+.nex-login-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--color-navy-900);
+  letter-spacing: -0.03em;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.nex-login-subtitle {
+  font-size: 0.9375rem;
+  color: var(--color-slate-500);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Feedback alert */
+.nex-feedback-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  background-color: var(--color-blue-50);
+  border: 1px solid var(--color-blue-100);
+  margin-bottom: 1.5rem;
+  animation: nex-fade-in 0.3s ease;
+}
+
+.nex-feedback-alert__badge {
+  background-color: var(--color-blue-600);
+  color: var(--color-white);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.nex-feedback-alert__text {
+  font-size: 0.8125rem;
+  color: var(--color-navy-800);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+@keyframes nex-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form controls */
+.nex-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.nex-login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.nex-link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-blue-600);
+  font-size: 0.84375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  text-decoration: none;
+}
+
+.nex-link-button:hover {
+  color: var(--color-blue-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nex-link-button:focus-visible {
+  outline: 2px solid var(--color-blue-600);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.nex-link-button--bold {
+  font-weight: 700;
+}
+
+/* Multi-input Grid Row */
+.nex-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+@media (max-width: 580px) {
+  .nex-form-row {
+    grid-template-columns: 1fr;
+    gap: 1.15rem;
+  }
+}
+
+/* Register container width adjustment */
+.nex-register-container {
+  max-width: 490px;
+}
+
+/* Auth Switch Link */
+.nex-auth-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 0.84375rem;
+  color: var(--color-slate-500);
+  margin-top: 0.35rem;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+/* Terms Checkbox styling */
+.nex-terms-wrapper {
+  margin-top: 0.15rem;
+  margin-bottom: 0.25rem;
+  text-align: left;
+}
+
+.nex-terms-link {
+  color: var(--color-blue-600);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.nex-terms-link:hover {
+  color: var(--color-blue-700);
+}
+
+/* Security footer */
+.nex-security-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-slate-100);
+  font-size: 0.75rem;
+  color: var(--color-slate-400);
+  text-align: center;
+}
+
+.nex-security-badge__icon {
+  color: var(--color-blue-600);
+  flex-shrink: 0;
+}
+
+.nex-login-help {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.nex-help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  color: var(--color-slate-500);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  padding: 4px 8px;
+}
+
+.nex-help-link:hover {
+  color: var(--color-navy-900);
+}
+
+/* ==========================================================================
+   Reusable UI Components Styling
+   ========================================================================== */
+
+/* Input Component */
+.nex-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+}
+
+.nex-input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.84375rem;
+  font-weight: 600;
+  color: var(--color-navy-800);
+}
+
+.nex-input-required {
+  color: var(--color-danger);
+}
+
+.nex-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-slate-300);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+  box-shadow: var(--shadow-xs);
+}
+
+.nex-input-wrapper:hover {
+  border-color: var(--color-slate-400);
+}
+
+.nex-input-wrapper--focused {
+  border-color: var(--color-blue-600) !important;
+  box-shadow: var(--shadow-focus) !important;
+  background-color: var(--color-white);
+}
+
+.nex-input-wrapper--error {
+  border-color: var(--color-danger) !important;
+}
+
+.nex-input-wrapper--error.nex-input-wrapper--focused {
+  box-shadow: var(--shadow-focus-danger) !important;
+}
+
+.nex-input-wrapper--disabled {
+  background-color: var(--color-slate-50);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.nex-input-field {
+  width: 100%;
+  padding: 0.75rem 0.95rem;
+  font-size: 0.9375rem;
+  color: var(--color-navy-900);
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.nex-input-field::placeholder {
+  color: var(--color-slate-400);
+}
+
+.nex-input-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-slate-400);
+  flex-shrink: 0;
+}
+
+.nex-input-icon--start {
+  padding-left: 0.95rem;
+}
+
+.nex-input-icon--end {
+  padding-right: 0.95rem;
+}
+
+.nex-input-action {
+  display: flex;
+  align-items: center;
+  padding-right: 0.6rem;
+}
+
+.nex-password-toggle {
+  background: none;
+  border: none;
+  padding: 0.35rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-slate-400);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.nex-password-toggle:hover {
+  color: var(--color-navy-900);
+  background-color: var(--color-slate-100);
+}
+
+.nex-password-toggle:focus-visible {
+  outline: 2px solid var(--color-blue-600);
+  outline-offset: 1px;
+}
+
+.nex-input-error-msg {
+  font-size: 0.78125rem;
+  color: var(--color-danger);
+  margin: 0.2rem 0 0 0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nex-input-helper-msg {
+  font-size: 0.78125rem;
+  color: var(--color-slate-500);
+  margin: 0.2rem 0 0 0;
+}
+
+/* Checkbox Component */
+.nex-checkbox-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.nex-checkbox-wrapper--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.nex-checkbox-control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nex-checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.nex-checkbox-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid var(--color-slate-300);
+  background-color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-xs);
+}
+
+.nex-checkbox-wrapper:hover .nex-checkbox-box {
+  border-color: var(--color-blue-500);
+}
+
+.nex-checkbox-input:focus-visible + .nex-checkbox-box {
+  outline: 2px solid var(--color-blue-600);
+  outline-offset: 2px;
+}
+
+.nex-checkbox-box--checked {
+  background-color: var(--color-blue-600);
+  border-color: var(--color-blue-600);
+  color: var(--color-white);
+}
+
+.nex-checkbox-check-icon {
+  stroke-dasharray: 20;
+  animation: nex-check-in 0.2s ease forwards;
+}
+
+@keyframes nex-check-in {
+  from {
+    stroke-dashoffset: 20;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.nex-checkbox-label {
+  font-size: 0.84375rem;
+  color: var(--color-navy-700);
+  font-weight: 500;
+}
+
+/* Button Component */
+.nex-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+.nex-btn:focus-visible {
+  outline: 2px solid var(--color-blue-600);
+  outline-offset: 2px;
+}
+
+.nex-btn--full {
+  width: 100%;
+}
+
+.nex-btn--sm {
+  padding: 0.5rem 0.85rem;
+  font-size: 0.8125rem;
+}
+
+.nex-btn--md {
+  padding: 0.65rem 1.15rem;
+  font-size: 0.875rem;
+}
+
+.nex-btn--lg {
+  padding: 0.85rem 1.45rem;
+  font-size: 0.9375rem;
+}
+
+/* Button Variants */
+.nex-btn--primary {
+  background-color: var(--color-blue-600);
+  color: var(--color-white);
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.nex-btn--primary:hover:not(:disabled) {
+  background-color: var(--color-blue-700);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
+.nex-btn--navy {
+  background-color: var(--color-navy-900);
+  color: var(--color-white);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+}
+
+.nex-btn--navy:hover:not(:disabled) {
+  background-color: var(--color-navy-800);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.35);
+  transform: translateY(-1px);
+}
+
+.nex-btn--outline {
+  background-color: var(--color-white);
+  border-color: var(--color-slate-300);
+  color: var(--color-navy-800);
+}
+
+.nex-btn--outline:hover:not(:disabled) {
+  background-color: var(--color-slate-50);
+  border-color: var(--color-slate-400);
+}
+
+.nex-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.nex-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.nex-btn__icon {
+  display: flex;
+  align-items: center;
+  transition: transform var(--transition-fast);
+}
+
+.nex-btn:hover:not(:disabled) .nex-btn__icon--right {
+  transform: translateX(3px);
+}
+
+.animate-spin {
+  animation: nex-spin 1s linear infinite;
+}
+
+@keyframes nex-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   Showcase Pane (Right Panel)
+   ========================================================================== */
+.nex-showcase {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 3.5rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nex-showcase__ambient-glow {
+  position: absolute;
+  top: -15%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.22) 0%, rgba(30, 58, 138, 0.08) 50%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+.nex-showcase__grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.nex-showcase__content {
+  position: relative;
+  z-index: 2;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.nex-showcase__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nex-showcase__system-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.75rem;
+  color: #93c5fd;
+  font-weight: 500;
+  backdrop-filter: blur(8px);
+}
+
+.nex-showcase__pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+}
+
+.nex-showcase__pitch {
+  text-align: left;
+}
+
+.nex-showcase__title {
+  font-size: 2.15rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--color-white);
+  margin: 0 0 0.85rem 0;
+}
+
+.nex-showcase__highlight {
+  background: linear-gradient(135deg, #60a5fa 0%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nex-showcase__subtitle {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* POS Terminal Preview Card */
+.nex-pos-preview-card {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  text-align: left;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.nex-pos-preview-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(96, 165, 250, 0.3);
+}
+
+.nex-pos-preview-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nex-pos-preview-card__terminal-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nex-pos-preview-card__terminal-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgba(37, 99, 235, 0.2);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #60a5fa;
+}
+
+.nex-pos-preview-card__terminal-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.nex-pos-preview-card__terminal-status {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.nex-pos-preview-card__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.nex-pos-preview-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.nex-pos-preview-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin: 1.15rem 0;
+}
+
+.nex-metric-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nex-metric-pill__label {
+  font-size: 0.6875rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.nex-metric-pill__value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: -0.02em;
+}
+
+.nex-metric-pill__trend {
+  font-size: 0.6875rem;
+  color: #34d399;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.nex-metric-pill__sub {
+  font-size: 0.6875rem;
+  color: #64748b;
+}
+
+.nex-pos-preview-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  color: #cbd5e1;
+}
+
+.nex-pos-preview-card__checkout-info {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.nex-pos-preview-card__secure-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #60a5fa;
+  font-weight: 500;
+}
+
+/* Showcase Features List */
+.nex-showcase__features {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+}
+
+.nex-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.nex-feature-item__icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(37, 99, 235, 0.15);
+  border: 1px solid rgba(96, 165, 250, 0.25);
+  color: #60a5fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.nex-feature-item__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-white);
+  margin: 0 0 0.15rem 0;
+}
+
+.nex-feature-item__desc {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Quote */
+.nex-showcase__quote {
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+}
+
+.nex-showcase__quote-text {
+  font-size: 0.84375rem;
+  font-style: italic;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin: 0 0 0.85rem 0;
+}
+
+.nex-showcase__quote-author {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.nex-showcase__author-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: var(--color-white);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nex-showcase__author-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.nex-showcase__author-role {
+  font-size: 0.71875rem;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   Forgot Password Modal
+   ========================================================================== */
+.nex-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.nex-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  animation: nex-fade-in 0.2s ease;
+}
+
+.nex-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: 2.25rem;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--color-slate-200);
+  box-sizing: border-box;
+  animation: nex-scale-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+}
+
+@keyframes nex-scale-up {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.nex-modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  color: var(--color-slate-400);
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.nex-modal-close:hover {
+  background-color: var(--color-slate-100);
+  color: var(--color-navy-900);
+}
+
+.nex-modal-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-blue-50);
+  border: 1px solid var(--color-blue-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.nex-modal-icon-wrap--success {
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success-border);
+  color: var(--color-success);
+}
+
+.nex-modal-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-navy-900);
+  margin: 0 0 0.5rem 0;
+}
+
+.nex-modal-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-slate-500);
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
+}
+
+.nex-modal-security-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: var(--radius-md);
+  background-color: var(--color-slate-50);
+  border: 1px solid var(--color-slate-200);
+  margin-top: 1.25rem;
+  font-size: 0.78125rem;
+  color: var(--color-slate-600);
+  line-height: 1.4;
+}
+
+.nex-modal-security-note svg {
+  color: var(--color-blue-600);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.nex-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.nex-modal-success {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .nex-auth-layout__showcase-pane {
+    display: none;
+  }
+
+  .nex-auth-layout__form-pane {
+    flex: 1 1 100%;
+    padding: 2rem 1.5rem;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-slate-50);
+  }
+
+  .nex-login-container {
+    max-width: 440px;
+    background-color: var(--color-white);
+    padding: 2.25rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-slate-200);
+  }
+
+  .nex-login-container.nex-register-container {
+    max-width: 520px;
+  }
+
+  .nex-login-header {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nex-auth-layout__form-pane {
+    padding: 1rem;
+    background-color: var(--color-white);
+  }
+
+  .nex-login-container {
+    padding: 1.25rem 0.5rem;
+    box-shadow: none;
+    border: none;
+  }
+
+  .nex-login-title {
+    font-size: 1.55rem;
+  }
+
+  .nex-login-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .nex-link-button {
+    align-self: flex-start;
+  }
+}
+
