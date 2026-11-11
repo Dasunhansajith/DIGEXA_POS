@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck, HelpCircle } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react'
 import { Input } from '../common/Input'
 import { Checkbox } from '../common/Checkbox'
 import { Button } from '../common/Button'
 import { BrandLogo } from '../common/BrandLogo'
 import { ForgotPasswordModal } from './ForgotPasswordModal'
+import { authApi, ApiError } from '../../api/client'
+import type { LoginResponse, TestAuthResponse } from '../../api/types'
 
 export interface LoginFormData {
   email: string
@@ -15,9 +17,14 @@ export interface LoginFormData {
 export interface LoginFormProps {
   onSubmit?: (data: LoginFormData) => Promise<void> | void
   onNavigateToRegister?: () => void
+  onLoginSuccess?: (loginResponse: LoginResponse, testResponse: TestAuthResponse) => void
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onNavigateToRegister }) => {
+export const LoginForm: React.FC<LoginFormProps> = ({
+  onSubmit,
+  onNavigateToRegister,
+  onLoginSuccess,
+}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(true)
@@ -25,7 +32,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onNavigateToRegi
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false)
-  const [submissionFeedback, setSubmissionFeedback] = useState<string | null>(null)
+  const [submissionFeedback, setSubmissionFeedback] = useState<{
+    type: 'error' | 'success' | 'info'
+    badge: string
+    text: string
+  } | null>(null)
 
   const validateForm = (): boolean => {
     const newErrors: { email?: string; password?: string } = {}
@@ -61,14 +72,60 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onNavigateToRegi
       if (onSubmit) {
         await onSubmit({ email, password, rememberMe })
       } else {
-        // UI Demonstration state: simulate async action then complete gracefully
-        await new Promise((resolve) => setTimeout(resolve, 1200))
-        setSubmissionFeedback(
-          'Login UI validated. Ready to connect to backend authentication endpoint.'
-        )
+        // 1. Authenticate with backend: POST /api/auth/login
+        const loginResponse = await authApi.login({
+          email: email.trim(),
+          password,
+        })
+
+        // 2. Call GET /api/test with Authorization: Bearer <accessToken> to verify authentication
+        const testResponse = await authApi.testAuth(loginResponse.accessToken)
+
+        setSubmissionFeedback({
+          type: 'success',
+          badge: 'Verified',
+          text: `Welcome, ${loginResponse.fullName}! Session authenticated successfully.`,
+        })
+
+        // 3. Redirect to Dashboard after successful authentication
+        if (onLoginSuccess) {
+          onLoginSuccess(loginResponse, testResponse)
+        }
       }
-    } catch (err) {
-      console.error('Login action error:', err)
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        if (err.status === 401) {
+          setSubmissionFeedback({
+            type: 'error',
+            badge: 'Auth Failed',
+            text: 'Invalid work email or password. Please verify your credentials.',
+          })
+        } else if (err.status === 0) {
+          setSubmissionFeedback({
+            type: 'error',
+            badge: 'Connection Error',
+            text: err.message,
+          })
+        } else {
+          setSubmissionFeedback({
+            type: 'error',
+            badge: 'Error',
+            text: err.message,
+          })
+        }
+      } else if (err instanceof Error) {
+        setSubmissionFeedback({
+          type: 'error',
+          badge: 'Error',
+          text: err.message,
+        })
+      } else {
+        setSubmissionFeedback({
+          type: 'error',
+          badge: 'Error',
+          text: 'An unexpected error occurred during sign in.',
+        })
+      }
     } finally {
       setIsLoading(false)
     }
@@ -78,11 +135,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onNavigateToRegi
     <div className="nex-login-container">
       {/* Top Brand Bar */}
       <div className="nex-login-header">
-        <BrandLogo size="md" />
-        <div className="nex-status-indicator">
-          <span className="nex-status-indicator__dot" />
-          <span className="nex-status-indicator__text">POS Cloud Online</span>
-        </div>
+        <BrandLogo size="lg" />
       </div>
 
       {/* Main Login Card / Content */}
@@ -90,15 +143,26 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onNavigateToRegi
         <div className="nex-login-intro">
           <h1 className="nex-login-title">Sign in to your POS terminal</h1>
           <p className="nex-login-subtitle">
-            Enter your credentials to access registers, inventory, and sales management.
+            Enter your credentials to access{' '}
+            <strong>registers, inventory,</strong> and{' '}
+            <strong>sales management.</strong>
           </p>
         </div>
 
         {/* Feedback Alert if triggered */}
         {submissionFeedback && (
-          <div className="nex-feedback-alert" role="status">
-            <span className="nex-feedback-alert__badge">Ready</span>
-            <span className="nex-feedback-alert__text">{submissionFeedback}</span>
+          <div
+            className={`nex-feedback-alert ${
+              submissionFeedback.type === 'error'
+                ? 'nex-feedback-alert--error'
+                : submissionFeedback.type === 'success'
+                ? 'nex-feedback-alert--success'
+                : ''
+            }`}
+            role="status"
+          >
+            <span className="nex-feedback-alert__badge">{submissionFeedback.badge}</span>
+            <span className="nex-feedback-alert__text">{submissionFeedback.text}</span>
           </div>
         )}
 
@@ -198,26 +262,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onNavigateToRegi
             </button>
           </div>
         </form>
-
-        {/* Enterprise Security Badge */}
-        <div className="nex-security-badge">
-          <ShieldCheck size={16} className="nex-security-badge__icon" />
-          <span>
-            Enterprise-grade security · 256-bit TLS encryption · Multi-terminal sync
-          </span>
-        </div>
-
-        {/* POS Assistance / Help row */}
-        <div className="nex-login-help">
-          <button
-            type="button"
-            className="nex-help-link"
-            onClick={() => alert('Terminal Support: For hardware or access assistance, please contact your store supervisor or NEXSHOP Support at 1-800-NEX-SHOP.')}
-          >
-            <HelpCircle size={14} />
-            <span>Need POS terminal assistance?</span>
-          </button>
-        </div>
       </div>
 
       {/* Forgot Password Modal */}
@@ -229,4 +273,3 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onNavigateToRegi
     </div>
   )
 }
-

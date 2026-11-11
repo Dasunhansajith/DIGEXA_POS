@@ -15,6 +15,8 @@ import { Input } from '../common/Input'
 import { Checkbox } from '../common/Checkbox'
 import { Button } from '../common/Button'
 import { BrandLogo } from '../common/BrandLogo'
+import { authApi, ApiError } from '../../api/client'
+import type { ShopRegistrationResponse } from '../../api/types'
 
 export interface RegisterFormData {
   shopName: string
@@ -29,11 +31,13 @@ export interface RegisterFormData {
 export interface RegisterFormProps {
   onSubmit?: (data: RegisterFormData) => Promise<void> | void
   onNavigateToLogin?: () => void
+  onRegisterSuccess?: (response: ShopRegistrationResponse) => void
 }
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({
   onSubmit,
   onNavigateToLogin,
+  onRegisterSuccess,
 }) => {
   const [shopName, setShopName] = useState('')
   const [ownerName, setOwnerName] = useState('')
@@ -47,7 +51,11 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [submissionFeedback, setSubmissionFeedback] = useState<string | null>(null)
+  const [submissionFeedback, setSubmissionFeedback] = useState<{
+    type: 'error' | 'success' | 'info'
+    badge: string
+    text: string
+  } | null>(null)
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
@@ -128,14 +136,95 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           agreeTerms,
         })
       } else {
-        // UI Demonstration state: simulate async action then complete gracefully
-        await new Promise((resolve) => setTimeout(resolve, 1400))
-        setSubmissionFeedback(
-          'Shop registration UI validated. Ready to connect to backend registration endpoint.'
-        )
+        // Map form fields to backend ShopRegistrationRequest DTO:
+        // shopName -> shopName
+        // ownerName -> ownerFullName
+        // email -> email
+        // phoneNumber -> phone
+        // password -> password
+        // confirmPassword -> confirmPassword
+        const response = await authApi.register({
+          shopName: shopName.trim(),
+          ownerFullName: ownerName.trim(),
+          email: email.trim().toLowerCase(),
+          phone: phoneNumber.trim(),
+          password,
+          confirmPassword,
+        })
+
+        setSubmissionFeedback({
+          type: 'success',
+          badge: 'Success',
+          text: `Shop "${response.shopName}" registered successfully! Redirecting to login...`,
+        })
+
+        if (onRegisterSuccess) {
+          onRegisterSuccess(response)
+        }
+
+        // Navigate to the existing Login page after successful registration
+        setTimeout(() => {
+          if (onNavigateToLogin) {
+            onNavigateToLogin()
+          }
+        }, 1500)
       }
-    } catch (err) {
-      console.error('Registration action error:', err)
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        if (err.status === 0) {
+          // Network connection error
+          setSubmissionFeedback({
+            type: 'error',
+            badge: 'Connection Error',
+            text: err.message,
+          })
+        } else if (err.status === 400 && err.message.toLowerCase().includes('already exists')) {
+          // Duplicate email error
+          setErrors((prev) => ({
+            ...prev,
+            email: 'An account with this email already exists',
+          }))
+          setSubmissionFeedback({
+            type: 'error',
+            badge: 'Duplicate Email',
+            text: 'An account with this email already exists. Please sign in or use another email.',
+          })
+        } else if (err.fieldErrors) {
+          // Backend field-level validation errors
+          const newFieldErrors: Record<string, string> = {}
+          if (err.fieldErrors.shopName) newFieldErrors.shopName = err.fieldErrors.shopName
+          if (err.fieldErrors.ownerFullName) newFieldErrors.ownerName = err.fieldErrors.ownerFullName
+          if (err.fieldErrors.email) newFieldErrors.email = err.fieldErrors.email
+          if (err.fieldErrors.phone) newFieldErrors.phoneNumber = err.fieldErrors.phone
+          if (err.fieldErrors.password) newFieldErrors.password = err.fieldErrors.password
+          if (err.fieldErrors.confirmPassword) newFieldErrors.confirmPassword = err.fieldErrors.confirmPassword
+
+          setErrors((prev) => ({ ...prev, ...newFieldErrors }))
+          setSubmissionFeedback({
+            type: 'error',
+            badge: 'Validation Error',
+            text: err.message || 'Please correct the highlighted fields below.',
+          })
+        } else {
+          setSubmissionFeedback({
+            type: 'error',
+            badge: 'Registration Error',
+            text: err.message || 'Registration failed. Please check your information and try again.',
+          })
+        }
+      } else if (err instanceof Error) {
+        setSubmissionFeedback({
+          type: 'error',
+          badge: 'Error',
+          text: err.message,
+        })
+      } else {
+        setSubmissionFeedback({
+          type: 'error',
+          badge: 'Error',
+          text: 'An unexpected error occurred during registration.',
+        })
+      }
     } finally {
       setIsLoading(false)
     }
@@ -173,9 +262,18 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
         {/* Feedback Alert if triggered */}
         {submissionFeedback && (
-          <div className="nex-feedback-alert" role="status">
-            <span className="nex-feedback-alert__badge">Ready</span>
-            <span className="nex-feedback-alert__text">{submissionFeedback}</span>
+          <div
+            className={`nex-feedback-alert ${
+              submissionFeedback.type === 'error'
+                ? 'nex-feedback-alert--error'
+                : submissionFeedback.type === 'success'
+                ? 'nex-feedback-alert--success'
+                : ''
+            }`}
+            role="status"
+          >
+            <span className="nex-feedback-alert__badge">{submissionFeedback.badge}</span>
+            <span className="nex-feedback-alert__text">{submissionFeedback.text}</span>
           </div>
         )}
 
