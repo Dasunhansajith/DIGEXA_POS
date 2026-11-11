@@ -3,8 +3,11 @@ package com.nexshop.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements Principal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +27,15 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @ToString.Exclude
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
     @Column(nullable = false)
     private String role = "OWNER";
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", nullable = false)
     private Shop shop;
@@ -46,5 +52,9 @@ public class User {
             this.role = "OWNER";
         }
     }
-}
 
+    @Override
+    public String getName() {
+        return this.email;
+    }
+}

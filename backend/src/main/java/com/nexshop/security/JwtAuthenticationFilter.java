@@ -7,10 +7,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -23,6 +26,8 @@ import java.util.Optional;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -57,6 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             // 2. Validate JWT signature and expiration
             if (!jwtService.isTokenValid(token)) {
+                log.warn("JWT token validation failed for URI: {}", request.getRequestURI());
                 SecurityContextHolder.clearContext();
                 filterChain.doFilter(request, response);
                 return;
@@ -69,6 +75,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String tokenRole = jwtService.extractRole(token);
 
             if (tokenUserId == null || tokenEmail == null) {
+                log.warn("JWT token missing userId or email claim for URI: {}", request.getRequestURI());
                 SecurityContextHolder.clearContext();
                 filterChain.doFilter(request, response);
                 return;
@@ -77,7 +84,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // 4. Load user from database using UserRepository.findById()
             Optional<User> optionalUser = userRepository.findById(tokenUserId);
             if (optionalUser.isEmpty()) {
-                // Reject tokens for deleted or non-existent users
+                log.warn("User not found in database for userId: {}", tokenUserId);
                 SecurityContextHolder.clearContext();
                 filterChain.doFilter(request, response);
                 return;
@@ -92,7 +99,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             boolean roleMatches = Objects.equals(tokenRole, user.getRole());
 
             if (!emailMatches || !shopIdMatches || !roleMatches) {
-                // Reject tokens with mismatched database state
+                log.warn("JWT claims mismatch for userId {}: emailMatch={}, shopMatch={}, roleMatch={}",
+                        tokenUserId, emailMatches, shopIdMatches, roleMatches);
                 SecurityContextHolder.clearContext();
                 filterChain.doFilter(request, response);
                 return;
@@ -113,14 +121,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             // 8. Set authentication in SecurityContextHolder
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authentication);
+            SecurityContextHolder.setContext(context);
+            log.debug("Authentication successfully set in SecurityContext for userId: {}, role: {}", tokenUserId, roleWithPrefix);
 
         } catch (Exception ex) {
-            // Clear SecurityContext on any unexpected error without logging sensitive token data
+            log.error("Authentication processing error for URI {}: {}", request.getRequestURI(), ex.getMessage());
             SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);
     }
 }
-
