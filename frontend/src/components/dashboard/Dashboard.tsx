@@ -1,19 +1,27 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
-  Store,
-  User,
-  LogOut,
-  ShieldCheck,
-  CheckCircle2,
-  ShoppingBag,
   Package,
+  AlertCircle,
+  RotateCcw,
   BarChart3,
-  Clock,
   Laptop,
 } from 'lucide-react'
-import { BrandLogo } from '../common/BrandLogo'
-import { Button } from '../common/Button'
-import type { AuthUser, TestAuthResponse } from '../../api/types'
+import type {
+  AuthUser,
+  AnalyticsPeriod,
+  AnalyticsOverviewResponse,
+  DailyRevenueTrend,
+  TopProductResponse,
+  SaleResponse,
+  TestAuthResponse,
+} from '../../api/types'
+import { analyticsApi, saleApi, ApiError } from '../../api/client'
+import { AnalyticsKpiCards } from './AnalyticsKpiCards'
+import { DateFiltersBar } from './DateFiltersBar'
+import { RevenueTrendChart } from './RevenueTrendChart'
+import { TopProductsCard } from './TopProductsCard'
+import { RecentSalesTable } from './RecentSalesTable'
+import { ReceiptModal } from '../pos/ReceiptModal'
 
 export interface DashboardProps {
   user: AuthUser | null
@@ -23,168 +31,226 @@ export interface DashboardProps {
   onNavigateToTerminal?: () => void
 }
 
+/**
+ * Helper to get date string formatted YYYY-MM-DD in Asia/Colombo timezone.
+ */
+const getShopDateString = (daysAgo = 0): string => {
+  const now = new Date()
+  const colombo = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Colombo' }))
+  colombo.setDate(colombo.getDate() - daysAgo)
+  const yyyy = colombo.getFullYear()
+  const mm = String(colombo.getMonth() + 1).padStart(2, '0')
+  const dd = String(colombo.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
+
 export const Dashboard: React.FC<DashboardProps> = ({
   user,
-  testResponse,
   onSignOut,
   onNavigateToProducts,
   onNavigateToTerminal,
 }) => {
+  // Filter States: Default to 'today' whenever the Dashboard opens
+  const [period, setPeriod] = useState<AnalyticsPeriod>('today')
+  const [customStart, setCustomStart] = useState<string>(() => getShopDateString(0))
+  const [customEnd, setCustomEnd] = useState<string>(() => getShopDateString(0))
+
+  // Data States
+  const [overview, setOverview] = useState<AnalyticsOverviewResponse | null>(null)
+  const [trend, setTrend] = useState<DailyRevenueTrend[]>([])
+  const [topProducts, setTopProducts] = useState<TopProductResponse[]>([])
+  const [recentSales, setRecentSales] = useState<SaleResponse[]>([])
+
+  // Loading & Error States
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  // Receipt Modal State
+  const [selectedSaleForReceipt, setSelectedSaleForReceipt] = useState<SaleResponse | null>(null)
+
+  // Fetch all analytics and sales data from backend
+  const fetchAnalyticsData = useCallback(
+    async (showSilentRefresh = false) => {
+      if (showSilentRefresh) {
+        setIsRefreshing(true)
+      } else {
+        setIsLoading(true)
+      }
+      setErrorMessage(null)
+
+      const filterParams = {
+        period,
+        startDate: period === 'custom' ? customStart : undefined,
+        endDate: period === 'custom' ? customEnd : undefined,
+      }
+
+      try {
+        // Fetch overview, revenue trend, top products, and recent sales in parallel
+        const [overviewRes, trendRes, topRes, salesRes] = await Promise.all([
+          analyticsApi.getOverview(filterParams),
+          analyticsApi.getRevenueTrend(filterParams),
+          analyticsApi.getTopProducts({ ...filterParams, limit: 5 }),
+          saleApi.getAll(),
+        ])
+
+        setOverview(overviewRes)
+        setTrend(trendRes)
+        setTopProducts(topRes)
+        setRecentSales(salesRes)
+      } catch (err: unknown) {
+        if (err instanceof ApiError) {
+          if (err.status === 401) {
+            setErrorMessage('Your session has expired. Please sign in again.')
+            onSignOut()
+          } else {
+            setErrorMessage(err.message || 'Failed to load sales analytics data.')
+          }
+        } else if (err instanceof Error) {
+          setErrorMessage(err.message)
+        } else {
+          setErrorMessage('Unable to connect to analytics service.')
+        }
+      } finally {
+        setIsLoading(false)
+        setIsRefreshing(false)
+      }
+    },
+    [period, customStart, customEnd, onSignOut]
+  )
+
+  // Trigger fetch whenever filter parameters change
+  useEffect(() => {
+    fetchAnalyticsData()
+  }, [fetchAnalyticsData])
+
+  // Handle custom date range submission
+  const handleApplyCustomRange = (start: string, end: string) => {
+    setCustomStart(start)
+    setCustomEnd(end)
+    setPeriod('custom')
+  }
+
+  const periodLabelMap: Record<AnalyticsPeriod, string> = {
+    today: 'Today',
+    yesterday: 'Yesterday',
+    last7days: 'Last 7 Days',
+    last30days: 'Last 30 Days',
+    this_month: 'This Month',
+    custom: `${customStart} to ${customEnd}`,
+  }
+
   return (
-    <div className="nex-dashboard-container">
-      {/* Top Navigation Bar */}
-      <header className="nex-dashboard-header">
-        <div className="nex-dashboard-brand">
-          <BrandLogo size="md" />
-          <div className="nex-dashboard-badge">
-            <span className="nex-status-indicator__dot" />
-            <span>POS Terminal Active</span>
+    <div className="digexa-analytics-dashboard">
+      {/* Top Banner with Merchant Branding and Quick POS Actions */}
+      <section className="digexa-analytics-hero">
+        <div className="digexa-analytics-hero__left">
+          <div className="digexa-hero-icon-pill">
+            <BarChart3 size={20} />
+            <span>Real-time Sales Analytics</span>
           </div>
+          <h1 className="digexa-analytics-hero__title">
+            Performance Overview
+          </h1>
+          <p className="digexa-analytics-hero__subtitle">
+            Live business intelligence, product velocity, and transactional trends for Shop #{user?.shopId ?? 1}
+          </p>
         </div>
 
-        <div className="nex-dashboard-actions">
-          <div className="nex-dashboard-user-info">
-            <div className="nex-dashboard-avatar">
-              <User size={18} />
-            </div>
-            <div className="nex-dashboard-user-details">
-              <span className="nex-dashboard-user-name">{user?.fullName || 'POS Merchant'}</span>
-              <span className="nex-dashboard-user-role">{user?.role || 'OWNER'}</span>
-            </div>
-          </div>
+        <div className="digexa-analytics-hero__actions">
+          {onNavigateToTerminal && (
+            <button
+              type="button"
+              className="digexa-btn digexa-btn--primary digexa-hero-btn"
+              onClick={onNavigateToTerminal}
+              title="Open the Cashier POS Terminal"
+            >
+              <Laptop size={17} />
+              <span>Launch POS Register</span>
+            </button>
+          )}
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onSignOut}
-            leftIcon={<LogOut size={16} />}
+          {onNavigateToProducts && (
+            <button
+              type="button"
+              className="digexa-btn digexa-btn--secondary digexa-hero-btn"
+              onClick={onNavigateToProducts}
+              title="Manage product catalog and inventory"
+            >
+              <Package size={17} />
+              <span>Product Catalog</span>
+            </button>
+          )}
+        </div>
+      </section>
+
+      {/* Date Range & Timeline Filter Bar */}
+      <DateFiltersBar
+        selectedPeriod={period}
+        onSelectPeriod={(p) => setPeriod(p)}
+        customStartDate={customStart}
+        customEndDate={customEnd}
+        onApplyCustomRange={handleApplyCustomRange}
+        onRefresh={() => fetchAnalyticsData(true)}
+        isRefreshing={isRefreshing}
+      />
+
+      {/* Error Alert Banner */}
+      {errorMessage && (
+        <div className="digexa-analytics-error" role="alert">
+          <AlertCircle size={20} className="digexa-analytics-error__icon" />
+          <div className="digexa-analytics-error__content">
+            <h4 className="digexa-analytics-error__title">Failed to load analytics</h4>
+            <p className="digexa-analytics-error__text">{errorMessage}</p>
+          </div>
+          <button
+            type="button"
+            className="digexa-btn digexa-btn--secondary digexa-btn--sm"
+            onClick={() => fetchAnalyticsData()}
           >
-            Lock Terminal
-          </Button>
+            <RotateCcw size={14} />
+            <span>Retry</span>
+          </button>
         </div>
-      </header>
+      )}
 
-      {/* Main Dashboard Content */}
-      <main className="nex-dashboard-main">
-        {/* Verification Success Banner */}
-        <div className="nex-dashboard-verified-banner" role="status">
-          <div className="nex-dashboard-verified-icon">
-            <CheckCircle2 size={24} className="text-emerald-500" />
-          </div>
-          <div className="nex-dashboard-verified-text">
-            <h3>Authentication & Session Verified</h3>
-            <p>
-              Successfully authenticated via Spring Boot backend! Protected endpoint <code>GET /api/test</code> verified with Bearer token.
-            </p>
-            {testResponse && (
-              <div className="nex-dashboard-test-payload">
-                <span>Verified Subject: <strong>{testResponse.email}</strong></span>
-                <span>User ID: <strong>{testResponse.userId}</strong></span>
-                <span>Assigned Role: <strong>{testResponse.role}</strong></span>
-                <span>In-Memory Token: <strong>Active (Secure)</strong></span>
-              </div>
-            )}
-          </div>
+      {/* 4 Core Financial KPI Cards */}
+      <AnalyticsKpiCards overview={overview} isLoading={isLoading} />
+
+      {/* Main Charts & Top Sellers Grid */}
+      <div className="digexa-analytics-grid">
+        {/* Left Column: Daily Revenue Trend Area Chart */}
+        <div className="digexa-analytics-grid__chart">
+          <RevenueTrendChart data={trend} isLoading={isLoading} />
         </div>
 
-        {/* Dashboard Grid */}
-        <div className="nex-dashboard-grid">
-          {/* Card 1: Shop & Terminal Info */}
-          <div className="nex-dashboard-card">
-            <div className="nex-dashboard-card__header">
-              <div className="nex-dashboard-card__icon nex-dashboard-card__icon--blue">
-                <Store size={20} />
-              </div>
-              <h4>Registered Terminal</h4>
-            </div>
-            <div className="nex-dashboard-card__body">
-              <div className="nex-dashboard-detail-row">
-                <span className="nex-dashboard-label">Shop ID:</span>
-                <span className="nex-dashboard-value">#{user?.shopId ?? 1}</span>
-              </div>
-              <div className="nex-dashboard-detail-row">
-                <span className="nex-dashboard-label">Work Email:</span>
-                <span className="nex-dashboard-value">{user?.email}</span>
-              </div>
-              <div className="nex-dashboard-detail-row">
-                <span className="nex-dashboard-label">Terminal ID:</span>
-                <span className="nex-dashboard-value">TERM-01 (Main Register)</span>
-              </div>
-              <div className="nex-dashboard-detail-row">
-                <span className="nex-dashboard-label">Token Storage:</span>
-                <span className="nex-dashboard-value nex-dashboard-value--tag">Memory Only</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 2: Security & Sync Status */}
-          <div className="nex-dashboard-card">
-            <div className="nex-dashboard-card__header">
-              <div className="nex-dashboard-card__icon nex-dashboard-card__icon--emerald">
-                <ShieldCheck size={20} />
-              </div>
-              <h4>Security Status</h4>
-            </div>
-            <div className="nex-dashboard-card__body">
-              <div className="nex-dashboard-detail-row">
-                <span className="nex-dashboard-label">Algorithm:</span>
-                <span className="nex-dashboard-value">HMAC-SHA256 (HS256)</span>
-              </div>
-              <div className="nex-dashboard-detail-row">
-                <span className="nex-dashboard-label">Token Expiration:</span>
-                <span className="nex-dashboard-value">1 Hour (Stateless)</span>
-              </div>
-              <div className="nex-dashboard-detail-row">
-                <span className="nex-dashboard-label">Backend URL:</span>
-                <span className="nex-dashboard-value">{import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081'}</span>
-              </div>
-              <div className="nex-dashboard-detail-row">
-                <span className="nex-dashboard-label">Cloud Sync:</span>
-                <span className="nex-dashboard-value nex-dashboard-value--active">Live (PostgreSQL)</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 3: POS Quick Access */}
-          <div className="nex-dashboard-card">
-            <div className="nex-dashboard-card__header">
-              <div className="nex-dashboard-card__icon nex-dashboard-card__icon--purple">
-                <Laptop size={20} />
-              </div>
-              <h4>POS Quick Navigation</h4>
-            </div>
-            <div className="nex-dashboard-card__body">
-              <div className="nex-dashboard-quick-actions">
-                <button
-                  type="button"
-                  className="nex-dashboard-action-btn"
-                  onClick={onNavigateToTerminal}
-                >
-                  <ShoppingBag size={18} />
-                  <span>Start New Sale</span>
-                </button>
-                <button
-                  type="button"
-                  className="nex-dashboard-action-btn"
-                  onClick={onNavigateToProducts}
-                >
-                  <Package size={18} />
-                  <span>Product Catalog</span>
-                </button>
-                <button type="button" className="nex-dashboard-action-btn">
-                  <BarChart3 size={18} />
-                  <span>Today's Receipts</span>
-                </button>
-                <button type="button" className="nex-dashboard-action-btn">
-                  <Clock size={18} />
-                  <span>Shift Summary</span>
-                </button>
-              </div>
-            </div>
-          </div>
+        {/* Right Column: Top 5 Best Selling Products */}
+        <div className="digexa-analytics-grid__top-products">
+          <TopProductsCard
+            products={topProducts}
+            isLoading={isLoading}
+            periodLabel={periodLabelMap[period]}
+          />
         </div>
-      </main>
+      </div>
+
+      {/* Recent Transactions Table */}
+      <div className="digexa-analytics-recent-section">
+        <RecentSalesTable
+          sales={recentSales}
+          isLoading={isLoading}
+          onSelectSale={(sale) => setSelectedSaleForReceipt(sale)}
+          onNavigateToTerminal={onNavigateToTerminal}
+        />
+      </div>
+
+      {/* Receipt Modal for viewing/reprinting from table */}
+      <ReceiptModal
+        isOpen={Boolean(selectedSaleForReceipt)}
+        sale={selectedSaleForReceipt}
+        shopName={`Shop #${user?.shopId ?? 1}`}
+        onClose={() => setSelectedSaleForReceipt(null)}
+      />
     </div>
   )
 }
-

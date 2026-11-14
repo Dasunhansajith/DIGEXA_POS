@@ -5,6 +5,8 @@ import { POSFeatureShowcase } from './components/auth/POSFeatureShowcase'
 import { Dashboard } from './components/dashboard/Dashboard'
 import { ProductManagement } from './components/products/ProductManagement'
 import { POSTerminal } from './components/pos/POSTerminal'
+import { InventoryManagement } from './components/inventory/InventoryManagement'
+import { SalesManagement } from './components/sales/SalesManagement'
 import { AppLayout } from './components/layout/AppLayout'
 import type { NavItemKey } from './components/layout/Sidebar'
 import { authApi, getAuthUser } from './api/client'
@@ -13,8 +15,10 @@ import './styles/auth.css'
 import './styles/dashboard.css'
 import './styles/products.css'
 import './styles/pos.css'
+import './styles/inventory.css'
+import './styles/sales.css'
 
-export type AuthView = 'login' | 'register' | 'dashboard' | 'products' | 'terminal'
+export type AuthView = 'login' | 'register' | 'dashboard' | 'products' | 'terminal' | 'inventory' | 'sales'
 
 export const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => getAuthUser())
@@ -29,6 +33,8 @@ export const App: React.FC = () => {
       if (getAuthUser()) {
         if (hash === '#dashboard') return 'dashboard'
         if (hash === '#terminal') return 'terminal'
+        if (hash === '#inventory') return 'inventory'
+        if (hash === '#sales') return 'sales'
         return 'products'
       }
       if (hash === '#register') {
@@ -54,6 +60,20 @@ export const App: React.FC = () => {
       } else if (hash === '#terminal') {
         if (currentUser) {
           setView('terminal')
+        } else {
+          window.location.hash = 'login'
+          setView('login')
+        }
+      } else if (hash === '#inventory') {
+        if (currentUser) {
+          setView('inventory')
+        } else {
+          window.location.hash = 'login'
+          setView('login')
+        }
+      } else if (hash === '#sales') {
+        if (currentUser) {
+          setView('sales')
         } else {
           window.location.hash = 'login'
           setView('login')
@@ -107,9 +127,18 @@ export const App: React.FC = () => {
   }
 
   // Authenticated Application Shell Views
-  if (currentUser && (view === 'products' || view === 'dashboard' || view === 'terminal')) {
+  if (
+    currentUser &&
+    (view === 'products' ||
+      view === 'dashboard' ||
+      view === 'terminal' ||
+      view === 'inventory' ||
+      view === 'sales')
+  ) {
     const isProducts = view === 'products'
     const isTerminal = view === 'terminal'
+    const isInventory = view === 'inventory'
+    const isSales = view === 'sales'
 
     return (
       <AppLayout
@@ -119,6 +148,8 @@ export const App: React.FC = () => {
           if (itemKey === 'products') navigateTo('products')
           else if (itemKey === 'dashboard') navigateTo('dashboard')
           else if (itemKey === 'terminal') navigateTo('terminal')
+          else if (itemKey === 'inventory') navigateTo('inventory')
+          else if (itemKey === 'sales') navigateTo('sales')
         }}
         onSignOut={handleSignOut}
         onAddProductClick={
@@ -129,7 +160,11 @@ export const App: React.FC = () => {
             ? 'Product Management'
             : isTerminal
             ? 'POS Cashier Terminal'
-            : 'Dashboard Overview'
+            : isInventory
+            ? 'Inventory Management'
+            : isSales
+            ? 'Sales Management'
+            : 'Sales Analytics Dashboard'
         }
         breadcrumb={{
           section: 'Workspace',
@@ -137,7 +172,11 @@ export const App: React.FC = () => {
             ? 'Products'
             : isTerminal
             ? 'POS Terminal'
-            : 'Dashboard',
+            : isInventory
+            ? 'Inventory Management'
+            : isSales
+            ? 'Sales Management'
+            : 'Analytics Overview',
         }}
       >
         {isProducts ? (
@@ -148,6 +187,10 @@ export const App: React.FC = () => {
           />
         ) : isTerminal ? (
           <POSTerminal />
+        ) : isInventory ? (
+          <InventoryManagement onSignOut={handleSignOut} />
+        ) : isSales ? (
+          <SalesManagement onSignOut={handleSignOut} />
         ) : (
           <Dashboard
             user={currentUser}

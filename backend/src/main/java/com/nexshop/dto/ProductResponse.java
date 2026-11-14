@@ -21,6 +21,7 @@ public class ProductResponse {
     private String category;
     private String imageUrl;
     private Integer stock;
+    private Integer lowStockThreshold;
     private Long shopId;
 
     public static ProductResponse fromEntity(Product product) {
@@ -35,6 +36,7 @@ public class ProductResponse {
                 .category(product.getCategory())
                 .imageUrl(product.getImageUrl())
                 .stock(product.getStock())
+                .lowStockThreshold(product.getLowStockThreshold())
                 .shopId(product.getShop() != null ? product.getShop().getId() : null)
                 .build();
     }

@@ -1,0 +1,717 @@
+/* =============================================================================
+   DIGEXA / NEXSHOP Premium Sales Management Styles (Step 51B)
+   Theme: DIGEXA Emerald Green (#50c45e / #10b981), Slate (#0f172a, #64748b)
+   2026 SaaS Aesthetic: Micro-interactions, clean cards, subtle elevation
+============================================================================= */
+
+.digexa-sales-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* =============================================================================
+   1. HEADER
+============================================================================= */
+.digexa-sales-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+  border: 1px solid #dcfce7;
+  border-radius: 16px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 2px 8px -2px rgba(16, 185, 129, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.digexa-sales-header__left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.digexa-sales-header__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  background-color: #d1fae5;
+  color: #047857;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  width: fit-content;
+}
+
+.digexa-sales-header__title {
+  margin: 0.15rem 0 0 0;
+  font-size: 1.625rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.digexa-sales-header__subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #64748b;
+  max-width: 600px;
+  line-height: 1.45;
+}
+
+.digexa-sales-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.digexa-sales-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.digexa-sales-btn--primary {
+  background-color: #50c45e;
+  color: #ffffff;
+}
+
+.digexa-sales-btn--primary:hover:not(:disabled) {
+  background-color: #3aa84a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(80, 196, 94, 0.3);
+}
+
+.digexa-sales-btn--secondary {
+  background-color: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.digexa-sales-btn--secondary:hover:not(:disabled) {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.digexa-sales-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =============================================================================
+   2. KPI CARDS
+============================================================================= */
+.digexa-sales-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.digexa-sales-kpi-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.35rem 1.5rem;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.digexa-sales-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -2px rgba(15, 23, 42, 0.08);
+}
+
+.digexa-sales-kpi-card--emerald {
+  border-top: 3.5px solid #10b981;
+}
+
+.digexa-sales-kpi-card--blue {
+  border-top: 3.5px solid #3b82f6;
+}
+
+.digexa-sales-kpi-card--violet {
+  border-top: 3.5px solid #8b5cf6;
+}
+
+.digexa-sales-kpi-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.digexa-sales-kpi-card__title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.digexa-sales-kpi-card__icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.digexa-sales-kpi-card__icon-wrap--emerald {
+  background-color: #ecfdf5;
+  color: #10b981;
+}
+
+.digexa-sales-kpi-card__icon-wrap--blue {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+.digexa-sales-kpi-card__icon-wrap--violet {
+  background-color: #f5f3ff;
+  color: #8b5cf6;
+}
+
+.digexa-sales-kpi-card__value {
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.digexa-sales-kpi-card__sub {
+  font-size: 0.775rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* =============================================================================
+   3. FILTERS & SEARCH BAR
+============================================================================= */
+.digexa-sales-filters-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.digexa-sales-presets-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.85rem;
+}
+
+.digexa-sales-preset-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  overflow-x: auto;
+}
+
+.digexa-sales-preset-btn {
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background-color: #f8fafc;
+  color: #475569;
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.digexa-sales-preset-btn:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.digexa-sales-preset-btn--active {
+  background-color: #ecfdf5;
+  color: #047857;
+  border-color: #a7f3d0;
+  font-weight: 700;
+}
+
+.digexa-sales-custom-date-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.digexa-sales-date-input {
+  padding: 0.4rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.8125rem;
+  color: #1e293b;
+  background-color: #ffffff;
+}
+
+.digexa-sales-date-input:focus {
+  outline: none;
+  border-color: #50c45e;
+  box-shadow: 0 0 0 3px rgba(80, 196, 94, 0.2);
+}
+
+/* Secondary Controls Row (Search, Method, Status, Sort) */
+.digexa-sales-controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.digexa-sales-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 260px;
+  max-width: 440px;
+}
+
+.digexa-sales-search-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.digexa-sales-search-input {
+  width: 100%;
+  padding: 0.6rem 2.2rem 0.6rem 2.4rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.875rem;
+  color: #1e293b;
+  background-color: #ffffff;
+  transition: all 0.15s ease;
+}
+
+.digexa-sales-search-input:focus {
+  outline: none;
+  border-color: #50c45e;
+  box-shadow: 0 0 0 3px rgba(80, 196, 94, 0.2);
+}
+
+.digexa-sales-search-clear {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+.digexa-sales-dropdowns-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.digexa-sales-select-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.digexa-sales-select-label {
+  font-size: 0.8125rem;
+  color: #64748b;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.digexa-sales-select {
+  padding: 0.55rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.825rem;
+  color: #334155;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.digexa-sales-select:focus {
+  outline: none;
+  border-color: #50c45e;
+  box-shadow: 0 0 0 3px rgba(80, 196, 94, 0.2);
+}
+
+/* =============================================================================
+   4. SALES TABLE & PAGINATION
+============================================================================= */
+.digexa-sales-table-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.digexa-sales-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.digexa-sales-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.digexa-sales-table th {
+  padding: 0.85rem 1.25rem;
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+  font-size: 0.775rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.digexa-sales-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  vertical-align: middle;
+}
+
+.digexa-sales-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Receipt Cell */
+.digexa-receipt-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  color: #047857;
+  cursor: pointer;
+}
+
+.digexa-receipt-cell:hover {
+  text-decoration: underline;
+  color: #065f46;
+}
+
+/* Payment Badges */
+.digexa-pay-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.775rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.digexa-pay-badge--cash {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.digexa-pay-badge--card {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+/* Status Pill */
+.digexa-sale-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.775rem;
+  font-weight: 700;
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+/* Table Row Action Buttons */
+.digexa-sales-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.digexa-sales-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.785rem;
+  font-weight: 600;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.digexa-sales-action-btn:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.digexa-sales-action-btn--print {
+  background-color: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.digexa-sales-action-btn--print:hover {
+  background-color: #dcfce7;
+  border-color: #4ade80;
+  color: #14532d;
+}
+
+/* Pagination Bar */
+.digexa-sales-pagination-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #f1f5f9;
+  background-color: #ffffff;
+}
+
+.digexa-sales-page-info {
+  font-size: 0.8125rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.digexa-sales-page-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.digexa-sales-page-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #334155;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.digexa-sales-page-nav-btn:hover:not(:disabled) {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.digexa-sales-page-nav-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* =============================================================================
+   5. SALE DETAILS MODAL
+============================================================================= */
+.digexa-sale-details-modal {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  width: 100%;
+  max-width: 620px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.digexa-sale-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+
+.digexa-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.digexa-detail-item__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.04em;
+}
+
+.digexa-detail-item__val {
+  font-size: 0.925rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Line Items Table in Details Modal */
+.digexa-details-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.digexa-details-items-table th {
+  background-color: #f8fafc;
+  padding: 0.65rem 0.85rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #475569;
+  text-transform: uppercase;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.digexa-details-items-table td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+}
+
+/* Financial Breakdown Card */
+.digexa-details-totals-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.85rem 1.15rem;
+  background-color: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.digexa-totals-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.digexa-totals-row--grand {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 0.45rem;
+  margin-top: 0.2rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* =============================================================================
+   6. RESPONSIVE BREAKPOINTS
+============================================================================= */
+@media (max-width: 1024px) {
+  .digexa-sales-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .digexa-sales-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .digexa-sales-header__actions {
+    width: 100%;
+  }
+
+  .digexa-sales-presets-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .digexa-sales-page {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .digexa-sales-controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .digexa-sales-search-wrap {
+    max-width: 100%;
+  }
+
+  .digexa-sales-dropdowns-wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .digexa-sale-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

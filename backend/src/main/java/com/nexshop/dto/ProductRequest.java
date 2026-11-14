@@ -37,5 +37,8 @@ public class ProductRequest {
 
     @Min(value = 0, message = "Stock cannot be negative")
     private Integer stock;
+
+    @Min(value = 0, message = "Low stock threshold cannot be negative")
+    private Integer lowStockThreshold;
 }
 

@@ -1,3 +1,4 @@
+
 package com.nexshop.config;
 
 import org.springframework.context.annotation.Bean;
@@ -21,8 +22,7 @@ public class CorsConfig {
                 "http://127.0.0.1:[*]",
                 "http://localhost:5173",
                 "http://localhost:5174",
-                "http://localhost:3000"
-        ));
+                "http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -43,8 +43,7 @@ public class CorsConfig {
                                 "http://127.0.0.1:[*]",
                                 "http://localhost:5173",
                                 "http://localhost:5174",
-                                "http://localhost:3000"
-                        )
+                                "http://localhost:3000")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                         .allowedHeaders("*")
                         .allowCredentials(true);

@@ -6,7 +6,6 @@ import {
   ShoppingCart,
   RotateCcw,
   CreditCard,
-  Lock,
   Tag,
   AlertTriangle,
   Receipt,
@@ -15,8 +14,10 @@ import {
 } from 'lucide-react'
 import type { CartItem, DiscountType, POSCustomerInfo } from './types'
 import { formatLKR, roundTo2Decimals } from './types'
+import type { SaleResponse } from '../../api/types'
 import { CustomerModal } from './CustomerModal'
 import { DiscountModal } from './DiscountModal'
+import { CheckoutModal } from './CheckoutModal'
 
 interface POSCartProps {
   items: CartItem[]
@@ -28,6 +29,7 @@ interface POSCartProps {
   onDiscountChange: (type: DiscountType, value: number) => void
   customerInfo: POSCustomerInfo
   onCustomerInfoChange: (info: POSCustomerInfo) => void
+  onCheckoutSuccess?: (sale: SaleResponse) => void
 }
 
 export const POSCart: React.FC<POSCartProps> = ({
@@ -40,9 +42,11 @@ export const POSCart: React.FC<POSCartProps> = ({
   onDiscountChange,
   customerInfo,
   onCustomerInfoChange,
+  onCheckoutSuccess,
 }) => {
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false)
   const [isDiscountModalOpen, setIsDiscountModalOpen] = useState(false)
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
 
   // Calculations
   const itemCount = items.length
@@ -82,6 +86,24 @@ export const POSCart: React.FC<POSCartProps> = ({
         activeValue={discountValue}
         onApply={(type, value) => onDiscountChange(type, value)}
         onClose={() => setIsDiscountModalOpen(false)}
+      />
+
+      {/* Checkout Modal Popup */}
+      <CheckoutModal
+        isOpen={isCheckoutModalOpen}
+        items={items}
+        customerInfo={customerInfo}
+        discountType={discountType}
+        discountValue={discountValue}
+        subtotal={subtotal}
+        discountAmount={calculatedDiscount}
+        grandTotal={grandTotal}
+        onSuccess={(sale) => {
+          if (onCheckoutSuccess) {
+            onCheckoutSuccess(sale)
+          }
+        }}
+        onClose={() => setIsCheckoutModalOpen(false)}
       />
 
       <aside className="pos-cart-panel" aria-label="Current POS sale order">
@@ -374,27 +396,34 @@ export const POSCart: React.FC<POSCartProps> = ({
             </div>
           </div>
 
-          {/* Checkout Action Button — Strictly disabled until Sales Backend is implemented */}
+          {/* Checkout Action Button */}
           <div className="pos-checkout-section">
             <button
               type="button"
-              className="pos-checkout-btn pos-checkout-btn--disabled"
-              disabled={true}
-              title="Checkout is disabled until the Sales Backend is implemented"
-              aria-disabled="true"
+              className={`pos-checkout-btn ${
+                items.length === 0
+                  ? 'pos-checkout-btn--disabled'
+                  : 'pos-checkout-btn--active'
+              }`}
+              disabled={items.length === 0}
+              onClick={() => {
+                if (items.length > 0) {
+                  setIsCheckoutModalOpen(true)
+                }
+              }}
+              title={
+                items.length === 0
+                  ? 'Add items to cart to proceed to checkout'
+                  : `Proceed to Checkout (${formatLKR(grandTotal)})`
+              }
+              aria-disabled={items.length === 0}
             >
               <div className="pos-checkout-btn__inner">
                 <CreditCard size={18} />
                 <span>Proceed to Checkout</span>
-                <Lock size={15} className="pos-checkout-lock-icon" />
+                <span className="pos-checkout-btn__badge">{formatLKR(grandTotal)}</span>
               </div>
             </button>
-
-            {/* Transparent Status Notice for Cashier */}
-            <div className="pos-checkout-notice">
-              <Lock size={12} />
-              <span>Sales & Payment backend integration in progress · Checkout disabled</span>
-            </div>
           </div>
         </div>
       </aside>

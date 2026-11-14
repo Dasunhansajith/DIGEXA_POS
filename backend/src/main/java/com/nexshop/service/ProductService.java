@@ -87,6 +87,7 @@ public class ProductService {
         product.setCategory(request.getCategory());
         product.setImageUrl(request.getImageUrl());
         product.setStock(request.getStock() != null ? request.getStock() : 0);
+        product.setLowStockThreshold(request.getLowStockThreshold() != null ? request.getLowStockThreshold() : 5);
         product.setShop(shop);
 
         Product saved = productRepository.save(product);
@@ -104,6 +105,9 @@ public class ProductService {
                     existing.setImageUrl(request.getImageUrl());
                     if (request.getStock() != null) {
                         existing.setStock(request.getStock());
+                    }
+                    if (request.getLowStockThreshold() != null) {
+                        existing.setLowStockThreshold(request.getLowStockThreshold());
                     }
                     // Shop association is never replaced or trusted from request body
                     Product updated = productRepository.save(existing);

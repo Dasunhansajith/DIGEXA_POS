@@ -1,264 +1,1317 @@
-/* NEXSHOP Dashboard Styles */
-.nex-dashboard-container {
-  min-height: 100vh;
-  background-color: var(--color-slate-50);
+/* =============================================================================
+   DIGEXA / NEXSHOP Modern Sales Analytics Dashboard Styles
+   Theme: Emerald Green (#50c45e / #10b981), Navy (#0f172a), Slate (#64748b)
+   2026 SaaS aesthetic: micro-interactions, clean cards, subtle elevation
+============================================================================= */
+
+.digexa-analytics-dashboard {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.nex-dashboard-header {
-  background-color: var(--color-white);
-  border-bottom: 1px solid var(--color-slate-200);
-  padding: 1rem 2rem;
+/* =============================================================================
+   1. HERO BANNER
+============================================================================= */
+.digexa-analytics-hero {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 20;
-}
-
-.nex-dashboard-brand {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.nex-dashboard-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.75rem;
-  background-color: var(--color-slate-100);
-  border: 1px solid var(--color-slate-200);
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-navy-800);
-}
-
-.nex-dashboard-actions {
-  display: flex;
-  align-items: center;
   gap: 1.5rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+  border: 1px solid #dcfce7;
+  border-radius: 16px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 2px 8px -2px rgba(16, 185, 129, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-.nex-dashboard-user-info {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.nex-dashboard-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--color-blue-100);
-  color: var(--color-blue-700);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nex-dashboard-user-details {
+.digexa-analytics-hero__left {
   display: flex;
   flex-direction: column;
+  gap: 0.35rem;
 }
 
-.nex-dashboard-user-name {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-navy-900);
+.digexa-hero-icon-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  background-color: #d1fae5;
+  color: #047857;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  width: fit-content;
+}
+
+.digexa-analytics-hero__title {
+  margin: 0.15rem 0 0 0;
+  font-size: 1.625rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.025em;
   line-height: 1.2;
 }
 
-.nex-dashboard-user-role {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-blue-600);
-}
-
-.nex-dashboard-main {
-  flex: 1;
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.nex-dashboard-verified-banner {
-  background-color: var(--color-success-bg);
-  border: 1px solid var(--color-success-border);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.5rem;
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-  box-shadow: var(--shadow-sm);
-  animation: nex-fade-in 0.3s ease;
-}
-
-.nex-dashboard-verified-icon {
-  margin-top: 2px;
-}
-
-.nex-dashboard-verified-text h3 {
-  margin: 0 0 0.35rem 0;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #065f46;
-}
-
-.nex-dashboard-verified-text p {
-  margin: 0 0 0.75rem 0;
+.digexa-analytics-hero__subtitle {
+  margin: 0;
   font-size: 0.875rem;
-  color: #047857;
-  line-height: 1.5;
+  color: #64748b;
+  max-width: 600px;
+  line-height: 1.45;
 }
 
-.nex-dashboard-verified-text code {
-  background-color: #d1fae5;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
+.digexa-analytics-hero__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
-.nex-dashboard-test-payload {
+.digexa-hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* =============================================================================
+   2. DATE FILTERS BAR
+============================================================================= */
+.digexa-analytics-filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem;
-  font-size: 0.8125rem;
-  color: #065f46;
-  background-color: rgba(255, 255, 255, 0.6);
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-sm);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 0.875rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
-.nex-dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
-}
-
-.nex-dashboard-card {
-  background-color: var(--color-white);
-  border: 1px solid var(--color-slate-200);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
+.digexa-analytics-filter-bar__left {
   display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  align-items: center;
+  gap: 0.875rem;
+  flex-wrap: wrap;
 }
 
-.nex-dashboard-card__header {
+.digexa-filter-icon-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #475569;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.digexa-filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background-color: #f8fafc;
+  padding: 0.25rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.digexa-filter-pill {
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #475569;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  white-space: nowrap;
+}
+
+.digexa-filter-pill:hover {
+  color: #0f172a;
+  background-color: #f1f5f9;
+}
+
+.digexa-filter-pill--active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+
+.digexa-analytics-filter-bar__right {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-.nex-dashboard-card__header h4 {
-  margin: 0;
-  font-size: 1rem;
+.digexa-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #475569;
+  font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--color-navy-900);
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.nex-dashboard-card__icon {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-md);
+.digexa-refresh-btn:hover:not(:disabled) {
+  background-color: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.digexa-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.digexa-spinning {
+  animation: digexa-spin 0.8s linear infinite;
+}
+
+@keyframes digexa-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom Date Range Panel */
+.digexa-custom-range-panel {
+  width: 100%;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.digexa-custom-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.digexa-date-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.digexa-date-field input[type='date'] {
+  padding: 0.4rem 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #0f172a;
+  background-color: #ffffff;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.digexa-date-field input[type='date']:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.digexa-range-arrow {
+  color: #94a3b8;
+}
+
+.digexa-custom-range-error {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* Error Banner */
+.digexa-analytics-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  color: #991b1b;
+}
+
+.digexa-analytics-error__icon {
+  flex-shrink: 0;
+  color: #dc2626;
+}
+
+.digexa-analytics-error__content {
+  flex: 1;
+}
+
+.digexa-analytics-error__title {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.digexa-analytics-error__text {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #b91c1c;
+}
+
+/* =============================================================================
+   3. FOUR KPI CARDS
+============================================================================= */
+.digexa-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.digexa-kpi-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.digexa-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.08);
+}
+
+.digexa-kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.digexa-kpi-card--emerald::before {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.digexa-kpi-card--blue::before {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+.digexa-kpi-card--purple::before {
+  background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+}
+
+.digexa-kpi-card--amber::before {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.digexa-kpi-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.digexa-kpi-card__title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.digexa-kpi-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.nex-dashboard-card__icon--blue {
-  background-color: var(--color-blue-50);
-  color: var(--color-blue-600);
-}
-
-.nex-dashboard-card__icon--emerald {
+.digexa-kpi-card__icon--emerald {
   background-color: #ecfdf5;
   color: #059669;
 }
 
-.nex-dashboard-card__icon--purple {
-  background-color: #f5f3ff;
+.digexa-kpi-card__icon--blue {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.digexa-kpi-card__icon--purple {
+  background-color: #faf5ff;
   color: #7c3aed;
 }
 
-.nex-dashboard-card__body {
+.digexa-kpi-card__icon--amber {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+
+.digexa-kpi-card__main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.digexa-kpi-card__value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.digexa-kpi-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.digexa-kpi-tag {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.digexa-kpi-tag--emerald {
+  background-color: #ecfdf5;
+  color: #047857;
+}
+
+.digexa-kpi-tag--blue {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.digexa-kpi-tag--purple {
+  background-color: #faf5ff;
+  color: #6d28d9;
+}
+
+.digexa-kpi-tag--amber {
+  background-color: #fffbeb;
+  color: #b45309;
+}
+
+.digexa-kpi-card__subtitle {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* Skeletons */
+.digexa-kpi-skeleton {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.nex-dashboard-detail-row {
+.digexa-kpi-skeleton__top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.875rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--color-slate-100);
 }
 
-.nex-dashboard-detail-row:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+.digexa-skeleton-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: #f1f5f9;
+  animation: digexa-pulse 1.5s infinite;
 }
 
-.nex-dashboard-label {
-  color: var(--color-slate-500);
+.digexa-skeleton-line {
+  height: 12px;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  animation: digexa-pulse 1.5s infinite;
 }
 
-.nex-dashboard-value {
-  font-weight: 600;
-  color: var(--color-navy-800);
+.digexa-skeleton-line--short {
+  width: 70px;
 }
 
-.nex-dashboard-value--tag {
-  background-color: var(--color-slate-100);
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
+.digexa-skeleton-line--big {
+  height: 28px;
+  width: 140px;
 }
 
-.nex-dashboard-value--active {
-  color: #059669;
+.digexa-skeleton-line--sub {
+  height: 12px;
+  width: 110px;
 }
 
-.nex-dashboard-quick-actions {
+.digexa-skeleton-line--long {
+  width: 120px;
+}
+
+@keyframes digexa-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* =============================================================================
+   4. CHARTS & TOP PRODUCTS GRID
+============================================================================= */
+.digexa-analytics-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Revenue Trend Chart Card */
+.digexa-trend-chart-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.digexa-trend-chart-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.digexa-trend-chart-card__title-group {
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
 }
 
-.nex-dashboard-action-btn {
+.digexa-trend-chart-card__icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #ecfdf5;
+  color: #059669;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.digexa-trend-chart-card__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.digexa-trend-chart-card__subtitle {
+  margin: 0.15rem 0 0 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.digexa-chart-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: #f8fafc;
+  padding: 0.2rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.digexa-chart-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.digexa-chart-pill:hover {
+  color: #0f172a;
+}
+
+.digexa-chart-pill--active {
+  background-color: #ffffff;
+  color: #059669 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Chart Summary Bar */
+.digexa-trend-chart-summary {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #f8fafc;
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  flex-wrap: wrap;
+}
+
+.digexa-trend-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.digexa-trend-summary-label {
+  color: #64748b;
+}
+
+.digexa-trend-summary-value {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.digexa-trend-summary-item--peak {
+  margin-left: auto;
+  color: #b45309;
+}
+
+.digexa-trend-summary-item--peak .digexa-trend-summary-value {
+  color: #0f172a;
+}
+
+/* Viewport and SVG */
+.digexa-chart-viewport-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.digexa-chart-loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.digexa-chart-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: digexa-spin 0.75s linear infinite;
+}
+
+.digexa-chart-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.digexa-chart-empty-text {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.digexa-svg-container {
+  position: relative;
+  width: 100%;
+}
+
+.digexa-trend-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  display: block;
+}
+
+.digexa-axis-text {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  fill: #94a3b8;
+}
+
+.digexa-axis-text--date {
+  font-size: 11.5px;
+  fill: #64748b;
+}
+
+/* Tooltip */
+.digexa-chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background-color: #0f172a;
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  font-size: 0.75rem;
+  z-index: 10;
+  min-width: 150px;
+  transition: transform 0.1s ease, left 0.1s ease, top 0.1s ease;
+}
+
+.digexa-tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #94a3b8;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid #334155;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.digexa-tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.digexa-tooltip-metric {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.digexa-tooltip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10b981;
+}
+
+.digexa-tooltip-name {
+  color: #cbd5e1;
+}
+
+.digexa-tooltip-val {
+  color: #34d399;
+  margin-left: auto;
+  font-size: 0.875rem;
+}
+
+.digexa-tooltip-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  color: #94a3b8;
+  font-size: 0.6875rem;
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+  border-top: 1px dashed #334155;
+}
+
+.digexa-tooltip-meta strong {
+  color: #ffffff;
+}
+
+/* =============================================================================
+   5. TOP BEST SELLERS CARD
+============================================================================= */
+.digexa-top-products-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.digexa-top-products-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.digexa-top-products-card__title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.digexa-top-products-card__icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #fef3c7;
+  color: #d97706;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.digexa-top-products-card__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.digexa-top-products-card__subtitle {
+  margin: 0.15rem 0 0 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.digexa-top-products-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.digexa-top-products-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background-color: var(--color-slate-50);
-  border: 1px solid var(--color-slate-200);
-  border-radius: var(--radius-md);
-  color: var(--color-navy-800);
+  text-align: center;
+  gap: 0.4rem;
+  padding: 3rem 1rem;
+  color: #64748b;
+}
+
+.digexa-top-products-empty-title {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.digexa-top-products-empty-sub {
+  margin: 0;
   font-size: 0.8125rem;
+  color: #94a3b8;
+  max-width: 250px;
+}
+
+.digexa-top-products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.digexa-top-product-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.digexa-rank-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.digexa-rank-badge--gold {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.digexa-rank-badge--silver {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.digexa-rank-badge--bronze {
+  background: linear-gradient(135deg, #ffedd5, #fed7aa);
+  color: #9a3412;
+  border: 1px solid #fdba74;
+}
+
+.digexa-rank-badge--default {
+  background-color: #f8fafc;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.digexa-top-product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.digexa-top-product-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.digexa-top-product-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+}
+
+.digexa-top-product-revenue {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #059669;
+}
+
+.digexa-top-product-sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.digexa-top-product-category {
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.digexa-top-product-units strong {
+  color: #0f172a;
+}
+
+.digexa-top-product-progress {
+  width: 100%;
+  height: 6px;
+  background-color: #f1f5f9;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 0.15rem;
+}
+
+.digexa-top-product-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+/* Skeletons for top products */
+.digexa-top-products-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.digexa-top-product-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.digexa-skeleton-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* =============================================================================
+   6. RECENT SALES TABLE CARD
+============================================================================= */
+.digexa-recent-sales-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.digexa-recent-sales-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.digexa-recent-sales-card__title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.digexa-recent-sales-card__icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.digexa-recent-sales-card__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.digexa-recent-sales-card__subtitle {
+  margin: 0.15rem 0 0 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.digexa-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.digexa-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.digexa-search-input {
+  padding: 0.45rem 2rem 0.45rem 2.25rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #0f172a;
+  outline: none;
+  width: 240px;
+  transition: all 0.15s ease;
+}
+
+.digexa-search-input:focus {
+  background-color: #ffffff;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+  width: 280px;
+}
+
+.digexa-search-clear {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.15rem;
+  cursor: pointer;
+}
+
+.digexa-recent-sales-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.digexa-recent-sales-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5rem;
+  padding: 3.5rem 1rem;
+  color: #64748b;
+}
+
+.digexa-recent-sales-empty-title {
+  margin: 0.25rem 0 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.digexa-recent-sales-empty-sub {
+  margin: 0 0 1rem 0;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  max-width: 380px;
+}
+
+/* Table */
+.digexa-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.digexa-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.digexa-table th {
+  padding: 0.75rem 1rem;
+  background-color: #f8fafc;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.digexa-table th.text-right,
+.digexa-table td.text-right {
+  text-align: right;
+}
+
+.digexa-table th.text-center,
+.digexa-table td.text-center {
+  text-align: center;
+}
+
+.digexa-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.875rem;
+  vertical-align: middle;
+}
+
+.digexa-table-row {
+  transition: background-color 0.1s ease;
+}
+
+.digexa-table-row:hover {
+  background-color: #f8fafc;
+}
+
+.digexa-receipt-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.digexa-receipt-pill-btn:hover {
+  background-color: #d1fae5;
+  border-color: #6ee7b7;
+}
+
+.digexa-customer-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.digexa-customer-name {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.digexa-customer-phone {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.digexa-pay-method-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.digexa-pay-method-badge--cash {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.digexa-pay-method-badge--card {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.digexa-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.digexa-status-badge--completed {
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.digexa-status-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10b981;
+}
+
+.digexa-table-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #475569;
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.15s ease;
 }
 
-.nex-dashboard-action-btn:hover {
-  background-color: var(--color-blue-50);
-  border-color: var(--color-blue-200);
-  color: var(--color-blue-600);
-  transform: translateY(-2px);
+.digexa-table-action-btn:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
 }
 
+/* =============================================================================
+   7. RESPONSIVE BREAKPOINTS
+============================================================================= */
+@media (max-width: 1200px) {
+  .digexa-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .digexa-analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .digexa-analytics-dashboard {
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+
+  .digexa-analytics-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .digexa-analytics-hero__actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .digexa-hero-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .digexa-analytics-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .digexa-filter-pills {
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 0.4rem;
+  }
+
+  .digexa-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .digexa-search-input {
+    width: 100%;
+  }
+
+  .digexa-search-input:focus {
+    width: 100%;
+  }
+}

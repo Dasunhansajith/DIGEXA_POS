@@ -7,6 +7,22 @@ import type {
   ShopRegistrationResponse,
   ProductRequest,
   ProductResponse,
+  SaleRequest,
+  SaleResponse,
+  PageResponse,
+  SalesSummaryResponse,
+  SalesFilterParams,
+  AnalyticsFilterParams,
+  AnalyticsOverviewResponse,
+  DailyRevenueTrend,
+  TopProductResponse,
+  InventoryOverviewResponse,
+  InventoryProductResponse,
+  StockAdjustmentRequest,
+  UpdateThresholdRequest,
+  InventoryAdjustmentResponse,
+  InventoryProductsFilterParams,
+  InventoryAdjustmentsFilterParams,
 } from './types'
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081').replace(/\/+$/, '')
@@ -228,3 +244,184 @@ export const productApi = {
     })
   },
 }
+
+export const saleApi = {
+  /**
+   * Process a checkout sale with atomic stock deduction and multi-tenant isolation.
+   */
+  async create(data: SaleRequest): Promise<SaleResponse> {
+    return apiRequest<SaleResponse>('/api/sales', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  },
+
+  /**
+   * Retrieve all sales for the authenticated shop.
+   */
+  async getAll(): Promise<SaleResponse[]> {
+    return apiRequest<SaleResponse[]>('/api/sales', {
+      method: 'GET',
+    })
+  },
+
+  /**
+   * Retrieve paginated and filtered sales for the authenticated shop.
+   */
+  async getPaged(params?: SalesFilterParams): Promise<PageResponse<SaleResponse>> {
+    return apiRequest<PageResponse<SaleResponse>>(`/api/sales${buildSalesQuery(params)}`, {
+      method: 'GET',
+    })
+  },
+
+  /**
+   * Retrieve aggregated sales summary for the current filters.
+   */
+  async getSummary(params?: SalesFilterParams): Promise<SalesSummaryResponse> {
+    const searchParams = new URLSearchParams()
+    if (params?.query && params.query.trim()) searchParams.append('query', params.query.trim())
+    if (params?.startDate) searchParams.append('startDate', params.startDate)
+    if (params?.endDate) searchParams.append('endDate', params.endDate)
+    if (params?.paymentMethod && params.paymentMethod.toUpperCase() !== 'ALL') {
+      searchParams.append('paymentMethod', params.paymentMethod.toUpperCase())
+    }
+    if (params?.status && params.status.toUpperCase() !== 'ALL') {
+      searchParams.append('status', params.status.toUpperCase())
+    }
+    const qs = searchParams.toString()
+    return apiRequest<SalesSummaryResponse>(`/api/sales/summary${qs ? `?${qs}` : ''}`, {
+      method: 'GET',
+    })
+  },
+
+  /**
+   * Retrieve a specific sale by ID, strictly scoped to the authenticated shop.
+   */
+  async getById(id: number): Promise<SaleResponse> {
+    return apiRequest<SaleResponse>(`/api/sales/${id}`, {
+      method: 'GET',
+    })
+  },
+}
+
+function buildSalesQuery(params?: SalesFilterParams): string {
+  if (!params) return ''
+  const searchParams = new URLSearchParams()
+  if (params.page !== undefined) searchParams.append('page', params.page.toString())
+  if (params.size !== undefined) searchParams.append('size', params.size.toString())
+  if (params.query && params.query.trim()) searchParams.append('query', params.query.trim())
+  if (params.startDate) searchParams.append('startDate', params.startDate)
+  if (params.endDate) searchParams.append('endDate', params.endDate)
+  if (params.paymentMethod && params.paymentMethod.toUpperCase() !== 'ALL') {
+    searchParams.append('paymentMethod', params.paymentMethod.toUpperCase())
+  }
+  if (params.status && params.status.toUpperCase() !== 'ALL') {
+    searchParams.append('status', params.status.toUpperCase())
+  }
+  if (params.sortBy) searchParams.append('sortBy', params.sortBy)
+  if (params.sortDir) searchParams.append('sortDir', params.sortDir)
+  const qs = searchParams.toString()
+  return qs ? `?${qs}` : ''
+}
+
+function buildAnalyticsQuery(params?: AnalyticsFilterParams): string {
+  if (!params) return ''
+  const searchParams = new URLSearchParams()
+  if (params.period) searchParams.append('period', params.period)
+  if (params.startDate) searchParams.append('startDate', params.startDate)
+  if (params.endDate) searchParams.append('endDate', params.endDate)
+  if (params.limit !== undefined) searchParams.append('limit', params.limit.toString())
+  const qs = searchParams.toString()
+  return qs ? `?${qs}` : ''
+}
+
+export const analyticsApi = {
+  /**
+   * Get KPI overview metrics (total revenue, transactions, items sold, ATV).
+   */
+  async getOverview(params?: AnalyticsFilterParams): Promise<AnalyticsOverviewResponse> {
+    return apiRequest<AnalyticsOverviewResponse>(`/api/analytics/overview${buildAnalyticsQuery(params)}`, {
+      method: 'GET',
+    })
+  },
+
+  /**
+   * Get daily revenue trend for timeline chart.
+   */
+  async getRevenueTrend(params?: AnalyticsFilterParams): Promise<DailyRevenueTrend[]> {
+    return apiRequest<DailyRevenueTrend[]>(`/api/analytics/revenue-trend${buildAnalyticsQuery(params)}`, {
+      method: 'GET',
+    })
+  },
+
+  /**
+   * Get top best-selling products by quantity and revenue.
+   */
+  async getTopProducts(params?: AnalyticsFilterParams): Promise<TopProductResponse[]> {
+    return apiRequest<TopProductResponse[]>(`/api/analytics/top-products${buildAnalyticsQuery(params)}`, {
+      method: 'GET',
+    })
+  },
+}
+
+export const inventoryApi = {
+  /**
+   * Get inventory overview KPI metrics (total products, units, in stock, low stock, out of stock).
+   */
+  async getOverview(): Promise<InventoryOverviewResponse> {
+    return apiRequest<InventoryOverviewResponse>('/api/inventory/overview', {
+      method: 'GET',
+    })
+  },
+
+  /**
+   * Get products with inventory status, threshold, and optional status/search/category filtering.
+   */
+  async getProducts(params?: InventoryProductsFilterParams): Promise<InventoryProductResponse[]> {
+    const searchParams = new URLSearchParams()
+    if (params?.status) searchParams.append('status', params.status)
+    if (params?.query && params.query.trim()) searchParams.append('query', params.query.trim())
+    if (params?.category && params.category.trim()) searchParams.append('category', params.category.trim())
+    const qs = searchParams.toString()
+    return apiRequest<InventoryProductResponse[]>(`/api/inventory/products${qs ? `?${qs}` : ''}`, {
+      method: 'GET',
+    })
+  },
+
+  /**
+   * Concurrency-safe atomic stock adjustment with audit logging.
+   */
+  async adjustStock(productId: number, data: StockAdjustmentRequest): Promise<InventoryProductResponse> {
+    return apiRequest<InventoryProductResponse>(`/api/inventory/products/${productId}/stock`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    })
+  },
+
+  /**
+   * Update product low-stock threshold.
+   */
+  async updateThreshold(productId: number, data: UpdateThresholdRequest): Promise<InventoryProductResponse> {
+    return apiRequest<InventoryProductResponse>(`/api/inventory/products/${productId}/threshold`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    })
+  },
+
+  /**
+   * Get inventory adjustment history with optional product filter and pagination.
+   */
+  async getAdjustments(params?: InventoryAdjustmentsFilterParams): Promise<InventoryAdjustmentResponse[]> {
+    const searchParams = new URLSearchParams()
+    if (params?.productId !== undefined) searchParams.append('productId', params.productId.toString())
+    if (params?.page !== undefined) searchParams.append('page', params.page.toString())
+    if (params?.size !== undefined) searchParams.append('size', params.size.toString())
+    const qs = searchParams.toString()
+    return apiRequest<InventoryAdjustmentResponse[]>(`/api/inventory/adjustments${qs ? `?${qs}` : ''}`, {
+      method: 'GET',
+    })
+  },
+}
+
+
+

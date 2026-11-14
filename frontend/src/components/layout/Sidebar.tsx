@@ -71,13 +71,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       key: 'inventory',
       label: 'Inventory',
       icon: <Boxes size={18} />,
-      isAvailable: false,
+      isAvailable: true,
     },
     {
       key: 'sales',
       label: 'Sales',
       icon: <TrendingUp size={18} />,
-      isAvailable: false,
+      isAvailable: true,
     },
     {
       key: 'customers',

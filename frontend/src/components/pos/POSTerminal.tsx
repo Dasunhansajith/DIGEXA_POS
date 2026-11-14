@@ -4,11 +4,13 @@ import {
   Laptop,
   Layers,
   Sparkles,
+  History,
 } from 'lucide-react'
 import { productApi } from '../../api/client'
-import type { ProductResponse } from '../../api/types'
+import type { ProductResponse, SaleResponse } from '../../api/types'
 import { POSProductCatalog } from './POSProductCatalog'
 import { POSCart } from './POSCart'
+import { RecentSalesModal } from './RecentSalesModal'
 import type { CartItem, DiscountType, POSCustomerInfo } from './types'
 import { ToastContainer, type ToastMessage, type ToastType } from '../common/Toast'
 
@@ -32,6 +34,9 @@ export const POSTerminal: React.FC = () => {
 
   // Responsive mobile view tab ('catalog' | 'cart')
   const [mobileTab, setMobileTab] = useState<'catalog' | 'cart'>('catalog')
+
+  // Recent sales / reprint modal
+  const [isRecentSalesOpen, setIsRecentSalesOpen] = useState<boolean>(false)
 
   // Toast feedback notifications
   const [toasts, setToasts] = useState<ToastMessage[]>([])
@@ -175,6 +180,26 @@ export const POSTerminal: React.FC = () => {
     showToast('Cart cleared', 'info')
   }, [cart.length, showToast])
 
+  // Handle successful sale checkout confirmed by server
+  const handleCheckoutSuccess = useCallback(
+    (sale: SaleResponse) => {
+      // 1. Clear cart state
+      setCart([])
+      setDiscountValue(0)
+      setCustomerInfo({ name: '', phone: '' })
+
+      // 2. Refresh inventory in real-time
+      loadProducts()
+
+      // 3. Show success notification
+      showToast(
+        `Sale completed successfully! Receipt: ${sale.receiptNumber}`,
+        'success'
+      )
+    },
+    [loadProducts, showToast]
+  )
+
   // Total cart units for mobile badge
   const totalCartUnits = useMemo(
     () => cart.reduce((acc, item) => acc + item.quantity, 0),
@@ -202,6 +227,16 @@ export const POSTerminal: React.FC = () => {
         </div>
 
         <div className="pos-terminal-header__right">
+          <button
+            type="button"
+            className="pos-terminal-recent-sales-btn"
+            onClick={() => setIsRecentSalesOpen(true)}
+            title="Browse past sales and reprint receipts"
+          >
+            <History size={15} />
+            <span>Past Receipts</span>
+          </button>
+
           <div className="pos-terminal-status-chip">
             <span className="pos-pulse-dot" />
             <span>POS Engine Live</span>
@@ -286,9 +321,16 @@ export const POSTerminal: React.FC = () => {
             }}
             customerInfo={customerInfo}
             onCustomerInfoChange={setCustomerInfo}
+            onCheckoutSuccess={handleCheckoutSuccess}
           />
         </div>
       </div>
+
+      {/* Recent Sales & Receipts Modal */}
+      <RecentSalesModal
+        isOpen={isRecentSalesOpen}
+        onClose={() => setIsRecentSalesOpen(false)}
+      />
     </div>
   )
 }
